@@ -1,0 +1,77 @@
+[project]
+name = "teich"
+version = "0.2.4"
+description = "Turn coding agent traces into auditable supervised fine-tuning data"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "typer>=0.12",
+    "rich>=13.0",
+    "datasets>=2.19.0",
+    "huggingface_hub>=0.23.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "websockets>=12",
+]
+
+[project.optional-dependencies]
+studio = ["fastapi>=0.110", "uvicorn>=0.29", "websockets>=12"]
+dev = ["pytest>=8.0", "ruff>=0.4", "jinja2>=3.1", "httpx>=0.27"]
+
+[project.scripts]
+teich = "teich.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/teich"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"docker/codex-runtime.Dockerfile" = "teich/docker/codex-runtime.Dockerfile"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/docker",
+    "/.github",
+    "/docs",
+    "/README.md",
+    "/DOCS.md",
+    "/ROADMAP.md",
+    "/LICENSE",
+    "/pyproject.toml",
+    "/uv.lock",
+    "/config.example.yaml",
+    "/teich_example.py",
+    "/gemma4_example.py",
+    "/gemma-template.jinja",
+    "/gemma-4-chat-template.jinja",
+    "/new_gemma_4_template.jinja",
+    "/qwen3.6_chat_template.jinja",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+pythonpath = ["src"]
+markers = [
+    "integration: marks tests as integration tests (requires Docker, API keys)",
+    "slow: marks tests as slow (Docker builds, real API calls)",
+    "tokenizer_smoke: marks tests as real Hugging Face tokenizer smoke tests",
+]
