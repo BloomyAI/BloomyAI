@@ -304,7 +304,7 @@ export default function EditorDetailPage() {
     return nodes.map(node => (
       <div key={node.id} style={{ paddingLeft: `${depth * 12}px` }}>
         <div
-          className="flex items-center gap-2 py-1 px-2 hover:bg-white/5 rounded cursor-pointer"
+          className="flex items-center gap-2 py-1 px-2 hover:bg-[#21262D] rounded cursor-pointer"
           onClick={() => {
             if (node.type === "file") {
               const existingTab = tabs.find(t => t.fileId === node.id);
@@ -330,11 +330,11 @@ export default function EditorDetailPage() {
           }}
         >
           {node.type === "folder" ? (
-            <FolderOpen className="w-4 h-4 text-bloomy-purple" />
+            <FolderOpen className="w-4 h-4 text-[#54AEFF]" />
           ) : (
-            <FileText className="w-4 h-4 text-white/60" />
+            <FileText className="w-4 h-4 text-[#8B949E]" />
           )}
-          <span className="text-sm text-white/80 truncate">{node.name}</span>
+          <span className="text-sm text-[#C9D1D9] truncate">{node.name}</span>
         </div>
         {node.type === "folder" && node.children && renderTree(node.children, depth + 1)}
       </div>
@@ -539,25 +539,25 @@ export default function EditorDetailPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-[#1E222B] overflow-hidden">
+    <div className="h-screen flex flex-col bg-[#0D1117] overflow-hidden">
       {/* Header */}
-      <div className="h-8 bg-[#15171E] flex items-center px-4 gap-4 border-b border-white/10 shrink-0">
+      <div className="h-14 bg-[#161B22] flex items-center px-4 gap-4 border-b border-[#30363D] shrink-0">
         <Link href="/editor/list">
-          <button className="p-1 hover:bg-white/10 rounded">
-            <ArrowLeft className="w-4 h-4 text-white/60" />
+          <button className="p-1 hover:bg-[#21262D] rounded">
+            <ArrowLeft className="w-4 h-4 text-[#8B949E]" />
           </button>
         </Link>
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-bloomy-purple" />
-          <span className="text-sm text-white/80">Bloomy AI Editor</span>
-          <span className="text-xs text-white/40">({workspaceName})</span>
+          <Code2 className="w-4 h-4 text-[#58A6FF]" />
+          <span className="text-sm text-[#C9D1D9]">Bloomy AI Editor</span>
+          <span className="text-xs text-[#8B949E]">({workspaceName})</span>
         </div>
         <div className="flex-1" />
-        <button onClick={doSave} className="p-1 hover:bg-white/10 rounded" title="Save (Ctrl+S)">
-          <Save className="w-4 h-4 text-white/60" />
+        <button onClick={doSave} className="p-1 hover:bg-[#21262D] rounded" title="Save (Ctrl+S)">
+          <Save className="w-4 h-4 text-[#8B949E]" />
         </button>
-        <button onClick={doDownload} className="p-1 hover:bg-white/10 rounded" title="Download">
-          <Download className="w-4 h-4 text-white/60" />
+        <button onClick={doDownload} className="p-1 hover:bg-[#21262D] rounded" title="Download">
+          <Download className="w-4 h-4 text-[#8B949E]" />
         </button>
       </div>
 
@@ -571,34 +571,34 @@ export default function EditorDetailPage() {
               animate={{ width: 250 }}
               exit={{ width: 0 }}
               transition={{ duration: 0.15 }}
-              className="bg-[#15171E] border-r border-white/10 flex flex-col overflow-hidden shrink-0"
+              className="bg-[#161B22] border-r border-[#30363D] flex flex-col overflow-hidden shrink-0"
             >
-              <div className="p-3 flex items-center justify-between border-b border-white/10">
-                <span className="text-xs text-white/60 uppercase tracking-wider">Explorer</span>
+              <div className="p-3 flex items-center justify-between border-b border-[#30363D]">
+                <span className="text-xs text-[#8B949E] uppercase tracking-wider font-semibold">Explorer</span>
                 <div className="flex gap-1">
-                  <button onClick={() => ctxAction("newFile")} className="p-1 hover:bg-white/10 rounded" title="New File">
-                    <FilePlus className="w-4 h-4 text-white/60" />
+                  <button onClick={() => ctxAction("newFile")} className="p-1 hover:bg-[#21262D] rounded" title="New File">
+                    <FilePlus className="w-4 h-4 text-[#8B949E]" />
                   </button>
-                  <button onClick={() => ctxAction("newFolder")} className="p-1 hover:bg-white/10 rounded" title="New Folder">
-                    <FolderPlus className="w-4 h-4 text-white/60" />
+                  <button onClick={() => ctxAction("newFolder")} className="p-1 hover:bg-[#21262D] rounded" title="New Folder">
+                    <FolderPlus className="w-4 h-4 text-[#8B949E]" />
                   </button>
                 </div>
               </div>
-              <div className="p-2 border-b border-white/10">
-                <div className="flex items-center bg-white/5 rounded px-2 py-1">
-                  <Search className="w-4 h-4 text-white/40" />
+              <div className="p-2 border-b border-[#30363D]">
+                <div className="flex items-center bg-[#0D1117] rounded px-2 py-1 border border-[#30363D]">
+                  <Search className="w-4 h-4 text-[#8B949E]" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search..."
-                    className="flex-1 bg-transparent ml-2 text-sm text-white placeholder-white/40 focus:outline-none"
+                    className="flex-1 bg-transparent ml-2 text-sm text-[#C9D1D9] placeholder-[#8B949E] focus:outline-none"
                   />
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-2 relative">
                 {files.length === 0 ? (
-                  <div className="p-4 text-center text-white/40">
+                  <div className="p-4 text-center text-[#8B949E]">
                     <FolderOpen className="w-10 h-10 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">No files</p>
                     <p className="text-xs mt-1">Right-click to create</p>
@@ -608,42 +608,42 @@ export default function EditorDetailPage() {
                 {/* Context Menu */}
                 {contextMenu && (
                   <div
-                    className="absolute bg-[#1E222B] border border-white/10 rounded-lg shadow-xl py-1 z-50 min-w-[150px]"
+                    className="absolute bg-[#161B22] border border-[#30363D] rounded-lg shadow-xl py-1 z-50 min-w-[150px]"
                     style={{ left: contextMenu.x, top: contextMenu.y }}
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
                       onClick={() => ctxAction("newFile", contextMenu.nodeId)}
-                      className="w-full px-3 py-2 text-left text-sm text-white/80 hover:bg-white/10 flex items-center gap-2"
+                      className="w-full px-3 py-2 text-left text-sm text-[#C9D1D9] hover:bg-[#21262D] flex items-center gap-2"
                     >
                       <FilePlus className="w-4 h-4" />
                       New File
                     </button>
                     <button
                       onClick={() => ctxAction("newFolder", contextMenu.nodeId)}
-                      className="w-full px-3 py-2 text-left text-sm text-white/80 hover:bg-white/10 flex items-center gap-2"
+                      className="w-full px-3 py-2 text-left text-sm text-[#C9D1D9] hover:bg-[#21262D] flex items-center gap-2"
                     >
                       <FolderPlus className="w-4 h-4" />
                       New Folder
                     </button>
                     {contextMenu.nodeId && (
                       <>
-                        <div className="h-px bg-white/10 my-1" />
+                        <div className="h-px bg-[#30363D] my-1" />
                         <button
                           onClick={() => ctxAction("rename", contextMenu.nodeId)}
-                          className="w-full px-3 py-2 text-left text-sm text-white/80 hover:bg-white/10"
+                          className="w-full px-3 py-2 text-left text-sm text-[#C9D1D9] hover:bg-[#21262D]"
                         >
                           Rename
                         </button>
                         <button
                           onClick={() => ctxAction("copy", contextMenu.nodeId)}
-                          className="w-full px-3 py-2 text-left text-sm text-white/80 hover:bg-white/10"
+                          className="w-full px-3 py-2 text-left text-sm text-[#C9D1D9] hover:bg-[#21262D]"
                         >
                           Copy
                         </button>
                         <button
                           onClick={() => ctxAction("delete", contextMenu.nodeId)}
-                          className="w-full px-3 py-2 text-left text-sm text-red-400 hover:bg-white/10"
+                          className="w-full px-3 py-2 text-left text-sm text-[#F85149] hover:bg-[#21262D]"
                         >
                           Delete
                         </button>
@@ -659,26 +659,26 @@ export default function EditorDetailPage() {
         {/* Editor Area */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Tabs */}
-          <div className="h-9 bg-[#15171E] flex items-center border-b border-white/10 overflow-x-auto shrink-0">
+          <div className="h-9 bg-[#161B22] flex items-center border-b border-[#30363D] overflow-x-auto shrink-0">
             {tabs.map((tab) => (
               <div
                 key={tab.id}
                 onClick={() => setActiveTabId(tab.id)}
-                className={`flex items-center gap-2 px-3 py-1 text-sm cursor-pointer border-r border-white/10 min-w-0 shrink-0 ${
-                  activeTabId === tab.id ? "bg-[#1E222B] text-white" : "text-white/60 hover:bg-white/5"
+                className={`flex items-center gap-2 px-3 py-1 text-sm cursor-pointer border-r border-[#30363D] min-w-0 shrink-0 ${
+                  activeTabId === tab.id ? "bg-[#0D1117] text-[#C9D1D9] border-t-2 border-t-[#F78166]" : "text-[#8B949E] hover:bg-[#21262D]"
                 }`}
               >
                 <FileText className="w-4 h-4 shrink-0" />
                 <span className="truncate">{tab.name}</span>
-                {tab.modified && <div className="w-2 h-2 rounded-full bg-bloomy-purple shrink-0" />}
-                <button onClick={(e) => { e.stopPropagation(); closeTab(tab.id); }} className="p-0.5 hover:bg-white/10 rounded shrink-0">
+                {tab.modified && <div className="w-2 h-2 rounded-full bg-[#F78166] shrink-0" />}
+                <button onClick={(e) => { e.stopPropagation(); closeTab(tab.id); }} className="p-0.5 hover:bg-[#21262D] rounded shrink-0">
                   <X className="w-3 h-3" />
                 </button>
               </div>
             ))}
             <button
               onClick={() => ctxAction("newFile")}
-              className="p-2 text-white/60 hover:text-white hover:bg-white/10"
+              className="p-2 text-[#8B949E] hover:text-[#C9D1D9] hover:bg-[#21262D]"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -713,16 +713,16 @@ export default function EditorDetailPage() {
                 }}
               />
             ) : (
-              <div className="h-full flex items-center justify-center text-white/40">
+              <div className="h-full flex items-center justify-center text-[#8B949E]">
                 <div className="text-center">
                   <Code2 className="w-16 h-16 mx-auto mb-4 opacity-30" />
                   <p className="text-lg">Bloomy AI Editor</p>
                   <p className="text-sm mt-2">Create a file or open from explorer</p>
                   <div className="flex gap-2 mt-4 justify-center">
-                    <button onClick={() => ctxAction("newFile")} className="px-4 py-2 bg-bloomy-purple/20 hover:bg-bloomy-purple/30 rounded-lg text-sm text-white transition-colors">
+                    <button onClick={() => ctxAction("newFile")} className="px-4 py-2 bg-[#238636] hover:bg-[#2EA043] rounded-lg text-sm text-[#C9D1D9] transition-colors">
                       New File
                     </button>
-                    <button onClick={() => ctxAction("newFolder")} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm text-white transition-colors">
+                    <button onClick={() => ctxAction("newFolder")} className="px-4 py-2 bg-[#21262D] hover:bg-[#30363D] rounded-lg text-sm text-[#C9D1D9] transition-colors">
                       New Folder
                     </button>
                   </div>
@@ -733,25 +733,25 @@ export default function EditorDetailPage() {
         </div>
 
         {/* AI Panel - Right Side */}
-        <div className="w-80 bg-[#15171E] border-l border-white/10 flex flex-col shrink-0">
-          <div className="h-8 flex items-center px-4 gap-3 border-b border-white/10">
-            <Zap className="w-4 h-4 text-bloomy-purple" />
-            <span className="text-sm text-white font-medium">Bloomy Coder</span>
+        <div className="w-80 bg-[#161B22] border-l border-[#30363D] flex flex-col shrink-0">
+          <div className="h-8 flex items-center px-4 gap-3 border-b border-[#30363D]">
+            <Zap className="w-4 h-4 text-[#58A6FF]" />
+            <span className="text-sm text-[#C9D1D9] font-medium">Bloomy Coder</span>
             <div className="flex-1" />
-            <button onClick={() => { setActiveConvId(null); setAiOutput(""); }} className="p-1 hover:bg-white/10 rounded" title="New Chat">
-              <Plus className="w-4 h-4 text-white/60" />
+            <button onClick={() => { setActiveConvId(null); setAiOutput(""); }} className="p-1 hover:bg-[#21262D] rounded" title="New Chat">
+              <Plus className="w-4 h-4 text-[#8B949E]" />
             </button>
-            <button onClick={doCopy} className="p-1 hover:bg-white/10 rounded" title="Copy">
-              {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-white/60" />}
+            <button onClick={doCopy} className="p-1 hover:bg-[#21262D] rounded" title="Copy">
+              {copied ? <Check className="w-4 h-4 text-[#238636]" /> : <Copy className="w-4 h-4 text-[#8B949E]" />}
             </button>
-            <button onClick={() => setTerminalOpen(!terminalOpen)} className="p-1 hover:bg-white/10 rounded" title="Terminal">
-              <Terminal className="w-4 h-4 text-white/60" />
+            <button onClick={() => setTerminalOpen(!terminalOpen)} className="p-1 hover:bg-[#21262D] rounded" title="Terminal">
+              <Terminal className="w-4 h-4 text-[#8B949E]" />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-4">
-            <pre className="text-sm text-green-400 whitespace-pre-wrap">{aiOutput || "Ask Bloomy Coder to help with your code..."}</pre>
+            <pre className="text-sm text-[#7EE787] whitespace-pre-wrap">{aiOutput || "Ask Bloomy Coder to help with your code..."}</pre>
           </div>
-          <div className="p-3 border-t border-white/10">
+          <div className="p-3 border-t border-[#30363D]">
             <div className="flex gap-2">
               <textarea
                 value={aiPrompt}
@@ -764,9 +764,9 @@ export default function EditorDetailPage() {
                 }}
                 placeholder="Ask Bloomy Coder... (Cmd+Enter to send)"
                 rows={3}
-                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-bloomy-purple/50 resize-none"
+                className="flex-1 bg-[#0D1117] border border-[#30363D] rounded-lg px-3 py-2 text-sm text-[#C9D1D9] placeholder-[#8B949E] focus:outline-none focus:ring-2 focus:ring-[#58A6FF]/50 resize-none"
               />
-              <button onClick={doAiGenerate} disabled={isAiGenerating || !aiPrompt.trim()} className="px-4 py-2 bg-bloomy-purple hover:bg-bloomy-purple/80 rounded-lg flex items-center gap-2 text-sm text-white disabled:opacity-50 transition-colors self-end">
+              <button onClick={doAiGenerate} disabled={isAiGenerating || !aiPrompt.trim()} className="px-4 py-2 bg-[#238636] hover:bg-[#2EA043] rounded-lg flex items-center gap-2 text-sm text-[#C9D1D9] disabled:opacity-50 transition-colors self-end">
                 {isAiGenerating ? "..." : "Send"}
               </button>
             </div>
@@ -776,31 +776,31 @@ export default function EditorDetailPage() {
 
       {/* Terminal */}
       {terminalOpen && (
-        <div className="h-48 bg-[#0D0F14] border-t border-white/10 flex flex-col shrink-0">
-          <div className="h-8 flex items-center px-4 gap-3 border-b border-white/10">
-            <Terminal className="w-4 h-4 text-white/60" />
-            <span className="text-sm text-white/80">Terminal</span>
-            <button onClick={() => setTerminalOpen(false)} className="ml-auto p-1 hover:bg-white/10 rounded">
-              <X className="w-4 h-4 text-white/60" />
+        <div className="h-48 bg-[#0D1117] border-t border-[#30363D] flex flex-col shrink-0">
+          <div className="h-8 flex items-center px-4 gap-3 border-b border-[#30363D]">
+            <Terminal className="w-4 h-4 text-[#8B949E]" />
+            <span className="text-sm text-[#C9D1D9]">Terminal</span>
+            <button onClick={() => setTerminalOpen(false)} className="ml-auto p-1 hover:bg-[#21262D] rounded">
+              <X className="w-4 h-4 text-[#8B949E]" />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 font-mono text-sm">
             {termLines.map((line, i) => (
-              <div key={i} className={`mb-1 ${line.type === "error" ? "text-red-400" : line.type === "success" ? "text-green-400" : line.type === "command" ? "text-white/60" : "text-white/80"}`}>
+              <div key={i} className={`mb-1 ${line.type === "error" ? "text-[#F85149]" : line.type === "success" ? "text-[#7EE787]" : line.type === "command" ? "text-[#8B949E]" : "text-[#C9D1D9]"}`}>
                 {line.text}
               </div>
             ))}
           </div>
-          <div className="p-2 border-t border-white/10">
+          <div className="p-2 border-t border-[#30363D]">
             <div className="flex items-center gap-2">
-              <span className="text-green-400">$</span>
+              <span className="text-[#7EE787]">$</span>
               <input
                 type="text"
                 value={termInput}
                 onChange={(e) => setTermInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") { runCmd(termInput); setTermInput(""); } }}
                 placeholder="Type a command..."
-                className="flex-1 bg-transparent text-white placeholder-white/40 focus:outline-none text-sm"
+                className="flex-1 bg-transparent text-[#C9D1D9] placeholder-[#8B949E] focus:outline-none text-sm"
               />
             </div>
           </div>
