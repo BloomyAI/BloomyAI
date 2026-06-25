@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     // Use OpenRouter for document analysis
     const response = await openai.chat.completions.create({
-      model: 'meta-llama/llama-3.3-70b-instruct:free',
+      model: 'mistralai/mistral-7b-instruct:free',
       messages: [
         {
           role: 'system',
