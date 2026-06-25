@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send,
@@ -85,6 +85,23 @@ export default function ChatDetailPage() {
   const [newChatName, setNewChatName] = useState("");
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  const [thinkingPhase, setThinkingPhase] = useState(0);
+
+  const thinkingPhrases: Record<string, string[]> = {
+    flash: ["Thinking...", "Almost there...", "Generating response..."],
+    core: ["Processing...", "Analyzing...", "Generating response..."],
+    pro: ["Deep thinking...", "Reasoning...", "Synthesizing...", "Almost done..."],
+    code: ["Reading the code...", "Writing solution...", "Compiling thoughts...", "Almost there..."],
+  };
+
+  useEffect(() => {
+    if (!isTyping) { setThinkingPhase(0); return; }
+    const phrases = thinkingPhrases[selectedModel] || thinkingPhrases.flash;
+    const interval = setInterval(() => {
+      setThinkingPhase(p => (p + 1) % phrases.length);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, [isTyping, selectedModel]);
 
   const greetings = {
     flash: "What's on your mind today?",
@@ -946,17 +963,24 @@ export default function ChatDetailPage() {
             <div className="max-w-3xl mx-auto space-y-6">
               {currentConversation?.messages.map(message => renderMessage(message))}
               {isTyping && (
-                <div className="flex gap-3">
+                <div className="flex gap-3 items-start">
                   <div className="w-8 h-8 rounded-full bg-dark-surface flex items-center justify-center shrink-0">
                     <img src="/logo.png" alt="Bloomy" className="w-8 h-8 rounded-full" />
                   </div>
                   <div className="flex-1">
-                    <div className="inline-block bg-transparent rounded-lg p-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-dark-text-secondary rounded-full animate-bounce" />
-                        <div className="w-2 h-2 bg-dark-text-secondary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-2 h-2 bg-dark-text-secondary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                      </div>
+                    <div className="inline-flex items-center gap-3 bg-dark-surface border border-dark-border rounded-2xl px-4 py-3">
+                      {/* Pulsing orb */}
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-bloomy-purple opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-bloomy-purple" />
+                      </span>
+                      <span
+                        key={thinkingPhase}
+                        className="text-sm text-dark-text-secondary"
+                        style={{ animation: 'fadeInUp 0.3s ease' }}
+                      >
+                        {(thinkingPhrases[selectedModel] || thinkingPhrases.flash)[thinkingPhase]}
+                      </span>
                     </div>
                   </div>
                 </div>

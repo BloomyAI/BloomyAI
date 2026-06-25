@@ -27,6 +27,14 @@ const openrouterModels: Record<string, string> = {
   code: "z-ai/glm-5.2",
 };
 
+// Lower token ceilings per model for snappier first-token latency
+const maxTokensByModel: Record<string, number> = {
+  flash: 2048,
+  core: 2048,
+  pro: 2048,
+  code: 4096, // coder needs room for large outputs
+};
+
 const visionModels: Record<string, string> = {
   flash: "google/gemini-3-flash-preview",
   core: "google/gemma-4-31b-it:free",
@@ -104,6 +112,7 @@ export async function POST(request: NextRequest) {
     // Choose provider: use OpenRouter with specified models
     const selectedModel = openrouterModels[model] || openrouterModels.core;
     const systemPrompt = agentPrompts[model] || agentPrompts.core;
+    const tokenLimit = maxTokensByModel[model] || 2048;
 
     // Build user message with attachment info
     let userContent = message;
@@ -148,13 +157,15 @@ export async function POST(request: NextRequest) {
             messages.push({ role: 'user', content: userContent });
           }
 
-          // Use OpenRouter
+          // Use OpenRouter — tuned for low latency
           const completion = await openai.chat.completions.create({
             model: modelToUse,
             messages,
             stream: true,
-            temperature: 0.5,
-            max_tokens: 4096,
+            temperature: 0.3,
+            max_tokens: tokenLimit,
+            presence_penalty: 0,
+            frequency_penalty: 0,
           });
 
           for await (const chunk of completion) {
