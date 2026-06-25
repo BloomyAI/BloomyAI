@@ -9,38 +9,40 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '22'
-    
-    - name: Install dependencies
-      run: |
-        cd mobile-app
-        npm ci
-    
+        cache: 'npm'
+        cache-dependency-path: mobile-app/package-lock.json
+
+    - name: Install JS dependencies
+      working-directory: mobile-app
+      run: npm install
+
     - name: Install CocoaPods
+      working-directory: mobile-app/ios
+      run: pod install
+
+    - name: Build iOS App (unsigned, simulator)
+      working-directory: mobile-app/ios
       run: |
-        cd mobile-app/ios
-        pod install
-    
-    - name: Build iOS App
-      run: |
-        cd mobile-app/ios
-        xcodebuild -workspace BloomyAI.xcworkspace -scheme BloomyAI -configuration Release -archivePath build/BloomyAI.xcarchive archive
-    
-    - name: Export IPA
-      run: |
-        cd mobile-app/ios
-        xcodebuild -exportArchive -archivePath build/BloomyAI.xcarchive -exportPath build/export -exportOptionsPlist ExportOptions.plist
-    
-    - name: Upload IPA artifact
+        xcodebuild \
+          -workspace BloomyAI.xcworkspace \
+          -scheme BloomyAI \
+          -configuration Release \
+          -sdk iphonesimulator \
+          -derivedDataPath build \
+          CODE_SIGNING_ALLOWED=NO \
+          build
+
+    - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
-        name: bloomy-ios-ipa
-        path: mobile-app/ios/build/export/*.ipa
+        name: bloomy-ios-build
+        path: mobile-app/ios/build/Build/Products/Release-iphonesimulator/BloomyAI.app
