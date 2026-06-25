@@ -753,15 +753,20 @@ export default function EditorDetailPage() {
           </div>
           <div className="p-3 border-t border-white/10">
             <div className="flex gap-2">
-              <input
-                type="text"
+              <textarea
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && !isAiGenerating && doAiGenerate()}
-                placeholder="Ask Bloomy Coder..."
-                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-bloomy-purple/50"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && !isAiGenerating) {
+                    e.preventDefault();
+                    doAiGenerate();
+                  }
+                }}
+                placeholder="Ask Bloomy Coder... (Cmd+Enter to send)"
+                rows={3}
+                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-bloomy-purple/50 resize-none"
               />
-              <button onClick={doAiGenerate} disabled={isAiGenerating || !aiPrompt.trim()} className="px-4 py-2 bg-bloomy-purple hover:bg-bloomy-purple/80 rounded-lg flex items-center gap-2 text-sm text-white disabled:opacity-50 transition-colors">
+              <button onClick={doAiGenerate} disabled={isAiGenerating || !aiPrompt.trim()} className="px-4 py-2 bg-bloomy-purple hover:bg-bloomy-purple/80 rounded-lg flex items-center gap-2 text-sm text-white disabled:opacity-50 transition-colors self-end">
                 {isAiGenerating ? "..." : "Send"}
               </button>
             </div>
