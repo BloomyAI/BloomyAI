@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     if (!process.env.OPENROUTER_API_KEY && !process.env.HUGGINGFACE_API_KEY) {
       return NextResponse.json({
         type: 'error',
-        content: 'No API key configured. Please add OPENROUTER_API_KEY or HUGGINGFACE_API_KEY to your .env file.',
+        content: 'No API key configured. Please add OPENROUTER_API_KEY or HUGGINGFACE_API_KEY to your Vercel environment variables.',
       });
     }
 
