@@ -655,56 +655,7 @@ export default function ChatDetailPage() {
                       <Video className="w-4 h-4" />
                       <span>Video Generation</span>
                     </button>
-                    <button
-                      onClick={() => {
-                        setMoreDropdownOpen(false);
-                        router.push('/voice-ai');
-                      }}
-                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
-                    >
-                      <Mic className="w-4 h-4" />
-                      <span>Voice AI</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setMoreDropdownOpen(false);
-                        router.push('/web-search');
-                      }}
-                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
-                    >
-                      <Search className="w-4 h-4" />
-                      <span>Web Search</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setMoreDropdownOpen(false);
-                        router.push('/document-analysis');
-                      }}
-                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
-                    >
-                      <FileText className="w-4 h-4" />
-                      <span>Document Analysis</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setMoreDropdownOpen(false);
-                        router.push('/workspaces');
-                      }}
-                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
-                    >
-                      <Users className="w-4 h-4" />
-                      <span>Collaborative Workspaces</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setMoreDropdownOpen(false);
-                        router.push('/cloud-sync');
-                      }}
-                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
-                    >
-                      <Cloud className="w-4 h-4" />
-                      <span>Cloud Sync</span>
-                    </button>
+
                   </div>
                 )}
               </div>

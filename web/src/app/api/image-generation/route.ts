@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // Use OpenRouter for image generation
     const response = await openai.chat.completions.create({
-      model: 'meta-llama/llama-3.1-8b-instruct:free',
+      model: 'google/gemini-3.1-flash-image',
       messages: [
         {
           role: 'system',

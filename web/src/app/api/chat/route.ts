@@ -21,17 +21,17 @@ const agentPrompts: Record<string, string> = {
 };
 
 const openrouterModels: Record<string, string> = {
-  flash: "meta-llama/llama-3.1-8b-instruct:free",
-  core: "mistralai/mistral-7b-instruct:free",
+  flash: "google/gemini-3-flash-preview",
+  core: "google/gemma-4-31b-it:free",
   pro: "huggingfaceh4/zephyr-7b-beta:free",
-  code: "meta-llama/llama-3.1-8b-instruct:free",
+  code: "z-ai/glm-5.2",
 };
 
 const visionModels: Record<string, string> = {
-  flash: "meta-llama/llama-3.2-11b-vision-instruct:free",
-  core: "meta-llama/llama-3.2-11b-vision-instruct:free",
-  pro: "meta-llama/llama-3.2-11b-vision-instruct:free",
-  code: "meta-llama/llama-3.2-11b-vision-instruct:free",
+  flash: "google/gemini-3-flash-preview",
+  core: "google/gemma-4-31b-it:free",
+  pro: "huggingfaceh4/zephyr-7b-beta:free",
+  code: "z-ai/glm-5.2",
 };
 
 function detectAndRejectInjection(message: string): boolean {

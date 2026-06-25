@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // Use OpenRouter for video generation description
     const response = await openai.chat.completions.create({
-      model: 'meta-llama/llama-3.1-8b-instruct:free',
+      model: 'x-ai/grok-imagine-video',
       messages: [
         {
           role: 'system',
