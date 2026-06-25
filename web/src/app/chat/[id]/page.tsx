@@ -26,6 +26,10 @@ import {
   ArrowUp,
   MessageSquarePlus,
   Image as ImageIcon,
+  Terminal,
+  Video,
+  Users,
+  Cloud,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -619,6 +623,10 @@ export default function ChatDetailPage() {
                 <Code className="w-4 h-4" />
                 <span>Coder</span>
               </div>
+              <Link href="/editor/new" className="flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm text-dark-text-secondary hover:bg-dark-surface">
+                <Terminal className="w-4 h-4" />
+                <span>Built-In IDE</span>
+              </Link>
               <div className="relative">
                 <button
                   onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
@@ -634,22 +642,72 @@ export default function ChatDetailPage() {
                     <button
                       onClick={() => {
                         setMoreDropdownOpen(false);
-                        // Handle image generation
+                        router.push('/image-generator');
                       }}
                       className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
                     >
                       <ImageIcon className="w-4 h-4" />
-                      <span>Image</span>
+                      <span>Image Generation</span>
                     </button>
                     <button
                       onClick={() => {
                         setMoreDropdownOpen(false);
-                        // Handle deep research
+                        router.push('/video-generator');
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
+                    >
+                      <Video className="w-4 h-4" />
+                      <span>Video Generation</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMoreDropdownOpen(false);
+                        router.push('/voice-ai');
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
+                    >
+                      <Mic className="w-4 h-4" />
+                      <span>Voice AI</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMoreDropdownOpen(false);
+                        router.push('/web-search');
                       }}
                       className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
                     >
                       <Search className="w-4 h-4" />
-                      <span>Deep Research</span>
+                      <span>Web Search</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMoreDropdownOpen(false);
+                        router.push('/document-analysis');
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>Document Analysis</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMoreDropdownOpen(false);
+                        router.push('/workspaces');
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
+                    >
+                      <Users className="w-4 h-4" />
+                      <span>Collaborative Workspaces</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMoreDropdownOpen(false);
+                        router.push('/cloud-sync');
+                      }}
+                      className="w-full px-3 py-2 text-left text-sm text-dark-text-secondary hover:bg-dark-surface transition-colors flex items-center gap-2"
+                    >
+                      <Cloud className="w-4 h-4" />
+                      <span>Cloud Sync</span>
                     </button>
                   </div>
                 )}
