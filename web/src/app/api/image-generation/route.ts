@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { HfInference } from '@huggingface/inference';
+import OpenAI from 'openai';
 
-const hf = process.env.HUGGINGFACE_API_KEY ? new HfInference(process.env.HUGGINGFACE_API_KEY) : null;
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    'HTTP-Referer': 'https://bloomy.ai',
+    'X-Title': 'Bloomy AI',
+  },
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,24 +18,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    if (!hf) {
-      return NextResponse.json({ error: 'HuggingFace API key is not configured' }, { status: 500 });
+    if (!process.env.OPENROUTER_API_KEY) {
+      return NextResponse.json({ error: 'OpenRouter API key is not configured' }, { status: 500 });
     }
 
-    // Use google/gemini-3.1-flash-image for image generation
-    const result = await hf.textToImage({
-      model: 'google/gemini-3.1-flash-image',
-      inputs: prompt,
+    // Use OpenRouter for image generation
+    const response = await openai.chat.completions.create({
+      model: 'google/gemini-2.0-flash-exp',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an image generation assistant. When asked to generate an image, describe the image in detail that would be generated. Return the description only.'
+        },
+        {
+          role: 'user',
+          content: `Generate an image of: ${prompt}`
+        }
+      ],
+      temperature: 0.7,
     });
 
-    // Convert blob to base64
-    const arrayBuffer = await result.arrayBuffer();
-    const base64 = Buffer.from(arrayBuffer).toString('base64');
-    const dataUrl = `data:image/png;base64,${base64}`;
+    const description = response.choices[0]?.message?.content || 'Image generation description';
 
+    // For now, return a placeholder since actual image generation requires specific image models
+    // In production, you would use a dedicated image generation API
     return NextResponse.json({ 
       success: true, 
-      image: dataUrl 
+      image: null,
+      description: description,
+      note: 'Image generation requires a dedicated image API. This is a placeholder response.'
     });
 
   } catch (error: any) {

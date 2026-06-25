@@ -8,6 +8,7 @@ export default function VideoGenerator() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -20,7 +21,11 @@ export default function VideoGenerator() {
       });
       const data = await response.json();
       if (data.success) {
+        if (data.note) {
+          alert(data.note);
+        }
         setGeneratedVideo(data.video);
+        setDescription(data.description);
       } else {
         alert(data.error || 'Failed to generate video');
       }

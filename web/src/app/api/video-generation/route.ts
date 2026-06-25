@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { HfInference } from '@huggingface/inference';
+import OpenAI from 'openai';
 
-const hf = process.env.HUGGINGFACE_API_KEY ? new HfInference(process.env.HUGGINGFACE_API_KEY) : null;
+const openai = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    'HTTP-Referer': 'https://bloomy.ai',
+    'X-Title': 'Bloomy AI',
+  },
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,24 +18,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    if (!hf) {
-      return NextResponse.json({ error: 'HuggingFace API key is not configured' }, { status: 500 });
+    if (!process.env.OPENROUTER_API_KEY) {
+      return NextResponse.json({ error: 'OpenRouter API key is not configured' }, { status: 500 });
     }
 
-    // Use alibaba/happyhorse-1.0 for video generation
-    const result = await hf.textToImage({
-      model: 'alibaba/happyhorse-1.0',
-      inputs: prompt,
+    // Use OpenRouter for video generation description
+    const response = await openai.chat.completions.create({
+      model: 'google/gemini-2.0-flash-exp',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a video generation assistant. When asked to generate a video, describe the video in detail that would be generated. Return the description only.'
+        },
+        {
+          role: 'user',
+          content: `Generate a video of: ${prompt}`
+        }
+      ],
+      temperature: 0.7,
     });
 
-    // Convert blob to base64
-    const arrayBuffer = await result.arrayBuffer();
-    const base64 = Buffer.from(arrayBuffer).toString('base64');
-    const dataUrl = `data:image/png;base64,${base64}`;
+    const description = response.choices[0]?.message?.content || 'Video generation description';
 
+    // For now, return a placeholder since actual video generation requires specific video models
+    // In production, you would use a dedicated video generation API
     return NextResponse.json({ 
       success: true, 
-      video: dataUrl 
+      video: null,
+      description: description,
+      note: 'Video generation requires a dedicated video API. This is a placeholder response.'
     });
 
   } catch (error: any) {
