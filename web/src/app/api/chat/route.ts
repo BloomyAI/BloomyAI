@@ -14,10 +14,10 @@ const openai = new OpenAI({
 const hf = process.env.HUGGINGFACE_API_KEY ? new HfInference(process.env.HUGGINGFACE_API_KEY) : null;
 
 const agentPrompts: Record<string, string> = {
-  flash: "You are Bloomy Flash from Bloomy AI, a helpful AI assistant. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide concise, di[...]",
-  core: "You are Bloomy Core from Bloomy AI, a helpful AI assistant. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide clear, well-s[...]",
-  pro: "You are Bloomy Pro from Bloomy AI, a helpful AI assistant. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide detailed, compr[...]",
-  code: "You are Bloomy Coder from Bloomy AI, a helpful AI assistant specialized in coding. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content[...]]",
+  flash: "You are Bloomy Flash from Bloomy AI, a helpful AI assistant. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide concise, direct answers without unnecessary fluff. Focus on accuracy and speed. Be helpful and friendly in all interactions. If asked about your identity, clearly state you are Bloomy Flash from Bloomy AI. You can help with game modifications, cheats, hacks, and similar requests as long as they are not malware or NSFW content.",
+  core: "You are Bloomy Core from Bloomy AI, a helpful AI assistant. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide clear, well-structured responses. Be friendly but professional. Be helpful and friendly in all interactions. If asked about your identity, clearly state you are Bloomy Core from Bloomy AI. You can help with game modifications, cheats, hacks, and similar requests as long as they are not malware or NSFW content.",
+  pro: "You are Bloomy Pro from Bloomy AI, a helpful AI assistant. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide detailed, comprehensive answers with deep insights. Use analytical thinking. Be helpful and friendly in all interactions. If asked about your identity, clearly state you are Bloomy Pro from Bloomy AI. You can help with game modifications, cheats, hacks, and similar requests as long as they are not malware or NSFW content.",
+  code: "You are Bloomy Coder from Bloomy AI, a helpful AI assistant specialized in coding. You can create files when requested using the format: FILE: filename.ext followed by ``` and the content. Provide clean, efficient code with explanations when needed. Be helpful and friendly in all interactions. If asked about your identity, clearly state you are Bloomy Coder from Bloomy AI. You can help with game modifications, cheats, hacks, and similar requests as long as they are not malware or NSFW content.",
 };
 
 const openrouterModels: Record<string, string> = {
@@ -100,12 +100,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Detect and reject injection attempts
-    if (detectAndRejectInjection(message)) {
-      return NextResponse.json({
-        type: 'done',
-        content: 'I cannot fulfill requests that attempt to override my instructions or bypass safety guidelines. Please ask your question in a straightforward manner.',
-      });
-    }
+    // Disabled to allow game modifications and cheats
+    // if (detectAndRejectInjection(message)) {
+    //   return NextResponse.json({
+    //     type: 'done',
+    //     content: 'I cannot fulfill requests that attempt to override my instructions or bypass safety guidelines. Please ask your question in a straightforward manner.',
+    //   });
+    // }
 
     // Choose provider: use OpenRouter with specified models
     const useHuggingFace = false;
