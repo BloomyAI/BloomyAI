@@ -12,13 +12,26 @@ export default function CloudSync() {
   const handleSync = async () => {
     setIsSyncing(true);
     setSyncStatus("syncing");
-    // TODO: Implement actual cloud sync
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/cloud-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'sync' }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setIsSyncing(false);
+        setSyncStatus("success");
+        setLastSync("Just now");
+        setTimeout(() => setSyncStatus("idle"), 2000);
+      } else {
+        setIsSyncing(false);
+        setSyncStatus("error");
+      }
+    } catch (error) {
       setIsSyncing(false);
-      setSyncStatus("success");
-      setLastSync("Just now");
-      setTimeout(() => setSyncStatus("idle"), 2000);
-    }, 2000);
+      setSyncStatus("error");
+    }
   };
 
   return (

@@ -20,18 +20,37 @@ export default function WorkspacesPage() {
     w.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleCreateWorkspace = () => {
+  const handleCreateWorkspace = async () => {
     if (newWorkspaceName.trim()) {
-      setWorkspaces([...workspaces, {
-        id: Date.now(),
-        name: newWorkspaceName,
-        description: newWorkspaceDesc || "No description",
-        lastModified: "Just now",
-        files: 0
-      }]);
-      setNewWorkspaceName("");
-      setNewWorkspaceDesc("");
-      setShowNewWorkspace(false);
+      try {
+        const response = await fetch('/api/workspaces', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            action: 'create',
+            data: { 
+              name: newWorkspaceName,
+              description: newWorkspaceDesc || "No description",
+              userId: 'current-user' 
+            }
+          }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          setWorkspaces([...workspaces, {
+            id: data.workspace.id,
+            name: newWorkspaceName,
+            description: newWorkspaceDesc || "No description",
+            lastModified: "Just now",
+            files: 0
+          }]);
+          setNewWorkspaceName("");
+          setNewWorkspaceDesc("");
+          setShowNewWorkspace(false);
+        }
+      } catch (error) {
+        alert('Failed to create workspace');
+      }
     }
   };
 
