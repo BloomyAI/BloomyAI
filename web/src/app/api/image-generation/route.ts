@@ -18,35 +18,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    if (!process.env.OPENROUTER_API_KEY) {
-      return NextResponse.json({ error: 'OpenRouter API key is not configured' }, { status: 500 });
-    }
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
 
-    // Use OpenRouter for image generation
-    const response = await openai.chat.completions.create({
-      model: 'google/gemini-2.5-flash-image-preview',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are BloomyAI image generator assistant. When asked to generate an image, describe the image in detail that would be generated and provide the finished image.'
-        },
-        {
-          role: 'user',
-          content: `Generate an image of: ${prompt}`
-        }
-      ],
-      temperature: 0.7,
-    });
-
-    const description = response.choices[0]?.message?.content || 'Image generation description';
-
-    // For now, return a placeholder since actual image generation requires specific image models
-    // In production, you would use a dedicated image generation API
     return NextResponse.json({ 
       success: true, 
-      image: null,
-      description: description,
-      note: 'Image generation requires a dedicated image API. This is a placeholder response.'
+      image: imageUrl,
+      description: prompt,
     });
 
   } catch (error: any) {
