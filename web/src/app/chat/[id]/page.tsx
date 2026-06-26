@@ -74,7 +74,8 @@ export default function ChatDetailPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [chatListOpen, setChatListOpen] = useState(false);
   const [chatSearchQuery, setChatSearchQuery] = useState("");
@@ -161,6 +162,18 @@ export default function ChatDetailPage() {
       console.error('Failed to download zip:', error);
     }
   };
+
+  // Detect mobile & set sidebar default
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -591,16 +604,26 @@ export default function ChatDetailPage() {
   };
 
   return (
-    <div className="h-screen flex bg-dark-bg">
+    <div className="h-screen flex bg-dark-bg overflow-hidden">
+      {/* Mobile sidebar backdrop */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: 260 }}
-            exit={{ width: 0 }}
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: isMobile ? '85vw' : 260, opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="bg-dark-surface border-r border-dark-border flex flex-col shrink-0"
+            className={`bg-dark-surface border-r border-dark-border flex flex-col shrink-0 ${
+              isMobile ? 'fixed left-0 top-0 h-full z-50 max-w-[320px]' : 'relative'
+            }`}
           >
             <div className="p-4 flex items-center justify-start">
               <img src="/logo.png" alt="Bloomy AI" className="w-8 h-8" />
@@ -921,7 +944,7 @@ export default function ChatDetailPage() {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="h-16 bg-dark-surface border-b border-dark-border flex items-center px-4 gap-4 shrink-0">
+        <div className="h-14 md:h-16 bg-dark-surface border-b border-dark-border flex items-center px-3 md:px-4 gap-2 md:gap-4 shrink-0">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 hover:bg-dark-border rounded-lg transition-colors"
@@ -971,7 +994,7 @@ export default function ChatDetailPage() {
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-2 md:p-4">
           {currentConversation?.messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center">
               {conversationId === 'coder' ? (
@@ -1015,7 +1038,7 @@ export default function ChatDetailPage() {
         </div>
 
         {/* Input Area */}
-        <div className="bg-dark-surface border-t border-dark-border p-4 shrink-0">
+        <div className="bg-dark-surface border-t border-dark-border p-2 md:p-4 shrink-0">
           <div className="max-w-3xl mx-auto">
             {currentConversation?.messages.length === 0 ? (
               <div className="w-full max-w-2xl relative">
