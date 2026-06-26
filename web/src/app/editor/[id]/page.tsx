@@ -497,10 +497,16 @@ export default function EditorDetailPage() {
     aiAbortRef.current = new AbortController();
 
     try {
+      // Build history from prior messages in the active conversation
+      const activeConv = conversations.find(c => c.id === convId);
+      const historyMessages = (activeConv?.messages || [])
+        .filter(m => m.role === 'user' || m.role === 'assistant')
+        .map(m => ({ role: m.role, content: m.content }));
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: promptToSend, model: "code", conversationId: convId }),
+        body: JSON.stringify({ message: promptToSend, model: "code", conversationId: convId, history: historyMessages }),
         signal: aiAbortRef.current.signal,
       });
 
