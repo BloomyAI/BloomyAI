@@ -431,8 +431,8 @@ export default function ChatDetailPage() {
     return (
       <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
         {!isUser && (
-          <div className="w-8 h-8 rounded-full bg-dark-surface flex items-center justify-center shrink-0">
-            <img src="/logo.png" alt="Bloomy" className="w-8 h-8 rounded-full" />
+          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+            <img src="/logo.png" alt="Bloomy" className="w-8 h-8 rounded-full object-cover" />
           </div>
         )}
         <div className={`flex-1 ${isUser ? 'text-right' : ''}`}>

@@ -136,3 +136,8 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Fix logo background matching by blending */
+img[src="/logo.png"], img[src="/new-chat.png"] {
+  mix-blend-mode: lighten;
+}
