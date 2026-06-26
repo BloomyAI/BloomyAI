@@ -1,37 +1,88 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { spawn } = require('child_process');
 const path = require('path');
+const http = require('http');
 
 let mainWindow;
+let nextServer;
+
+// Poll until Next.js is up
+function waitForServer(url, maxTries = 40, interval = 500) {
+  return new Promise((resolve, reject) => {
+    let tries = 0;
+    const check = () => {
+      http.get(url, res => {
+        if (res.statusCode < 500) resolve();
+        else retry();
+      }).on('error', retry);
+    };
+    const retry = () => {
+      if (++tries >= maxTries) return reject(new Error('Next.js server did not start'));
+      setTimeout(check, interval);
+    };
+    check();
+  });
+}
+
+function startNextServer() {
+  const webDir = path.join(__dirname, '..', 'web');
+
+  // Use the locally installed next binary
+  const nextBin = path.join(webDir, 'node_modules', '.bin', 'next');
+
+  nextServer = spawn(
+    process.platform === 'win32' ? `${nextBin}.cmd` : nextBin,
+    ['start', '--port', '3131'],
+    {
+      cwd: webDir,
+      env: { ...process.env, PORT: '3131' },
+      stdio: 'inherit',
+    }
+  );
+
+  nextServer.on('error', err => console.error('Failed to start Next.js:', err));
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1280,
+    height: 860,
     minWidth: 800,
     minHeight: 600,
-    frame: false,          // borderless
+    frame: false,
     titleBarStyle: 'hidden',
     backgroundColor: '#13151C',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
     },
-    icon: path.join(__dirname, 'logo.png')
+    icon: path.join(__dirname, 'logo.png'),
   });
 
-  // Remove native menu bar entirely
+  // Remove native menu bar
   Menu.setApplicationMenu(null);
 
-  // Load the chat interface from Vercel
-  mainWindow.loadURL('https://bloomyaiweb.vercel.app/chat-simple');
+  // Show a loading screen while Next.js boots
+  mainWindow.loadFile(path.join(__dirname, 'loading.html'));
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  waitForServer('http://localhost:3131/')
+    .then(() => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.loadURL('http://localhost:3131/chat/new');
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.loadURL('http://localhost:3131/chat/new');
+      }
+    });
+
+  mainWindow.on('closed', () => { mainWindow = null; });
 }
 
-// IPC handlers for custom window controls
+// IPC handlers for frameless window controls
 ipcMain.on('window-minimize', () => mainWindow?.minimize());
 ipcMain.on('window-maximize', () => {
   if (mainWindow?.isMaximized()) mainWindow.unmaximize();
@@ -40,17 +91,15 @@ ipcMain.on('window-maximize', () => {
 ipcMain.on('window-close', () => mainWindow?.close());
 
 app.whenReady().then(() => {
+  startNextServer();
   createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (nextServer) nextServer.kill();
+  if (process.platform !== 'darwin') app.quit();
 });

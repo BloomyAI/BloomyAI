@@ -11,55 +11,62 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
-    
+
     runs-on: ${{ matrix.os }}
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '22'
-    
-    - name: Install dependencies
-      run: |
-        cd desktop-app
-        npm install
-    
+
+    - name: Install web dependencies
+      working-directory: web
+      run: npm install
+
+    - name: Build Next.js app
+      working-directory: web
+      run: npm run build
+      env:
+        NEXTAUTH_URL: http://localhost:3131
+        NEXTAUTH_SECRET: build-placeholder
+
+    - name: Install Electron dependencies
+      working-directory: desktop-app
+      run: npm install
+
     - name: Build Electron app (Windows)
       if: matrix.os == 'windows-latest'
-      run: |
-        cd desktop-app
-        npm run build -- --win
-    
+      working-directory: desktop-app
+      run: npm run build:win
+
     - name: Build Electron app (macOS)
       if: matrix.os == 'macos-latest'
-      run: |
-        cd desktop-app
-        npm run build -- --mac
-    
+      working-directory: desktop-app
+      run: npm run build:mac
+
     - name: Build Electron app (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: |
-        cd desktop-app
-        npm run build -- --linux
-    
+      working-directory: desktop-app
+      run: npm run build:linux
+
     - name: Upload artifacts (Windows)
       if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v4
       with:
         name: bloomy-desktop-windows
         path: desktop-app/dist/*.exe
-    
+
     - name: Upload artifacts (macOS)
       if: matrix.os == 'macos-latest'
       uses: actions/upload-artifact@v4
       with:
         name: bloomy-desktop-macos
         path: desktop-app/dist/*.dmg
-    
+
     - name: Upload artifacts (Linux)
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4
