@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import JSZip from 'jszip';
+import { zipSync, strToU8 } from 'fflate';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,17 +9,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Files array is required' }, { status: 400 });
     }
 
-    const zip = new JSZip();
-
-    files.forEach((file: { name: string; content: string }) => {
-      if (file.name && file.content) {
-        zip.file(file.name, file.content);
+    // Build the fflate input map: { 'filename': Uint8Array }
+    const zipInput: Record<string, Uint8Array> = {};
+    for (const file of files as { name: string; content: string }[]) {
+      if (file.name && file.content !== undefined) {
+        zipInput[file.name] = strToU8(file.content);
       }
-    });
+    }
 
-    const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
+    const zipped = zipSync(zipInput, { level: 6 });
 
-    return new NextResponse(zipBuffer as any, {
+    return new NextResponse(zipped, {
       headers: {
         'Content-Type': 'application/zip',
         'Content-Disposition': 'attachment; filename="bloomy-files.zip"',

@@ -29,7 +29,10 @@
           ".next/**/*",
           "public/**/*",
           "node_modules/**/*",
-          "package.json"
+          "package.json",
+          "next.config.js",
+          ".env",
+          ".env.local"
         ]
       }
     ],
