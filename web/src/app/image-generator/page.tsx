@@ -21,9 +21,6 @@ export default function ImageGenerator() {
       });
       const data = await response.json();
       if (data.success) {
-        if (data.note) {
-          alert(data.note);
-        }
         setGeneratedImage(data.image);
         setDescription(data.description);
       } else {
