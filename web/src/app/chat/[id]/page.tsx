@@ -299,6 +299,13 @@ export default function ChatDetailPage() {
     abortControllerRef.current = new AbortController();
 
     try {
+      // Build history from all prior messages in this conversation (excluding the one just added)
+      const currentConv = conversations.find(c => c.id === conversationId);
+      const historyMessages = (currentConv?.messages || [])
+        .filter(m => m.role === 'user' || m.role === 'assistant')
+        .slice(0, -1) // exclude the user message we just pushed
+        .map(m => ({ role: m.role, content: m.content }));
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -307,6 +314,7 @@ export default function ChatDetailPage() {
           model: selectedModel,
           conversationId: conversationId,
           attachments: attachmentsToSend.length > 0 ? attachmentsToSend : undefined,
+          history: historyMessages,
         }),
         signal: abortControllerRef.current.signal,
       });
