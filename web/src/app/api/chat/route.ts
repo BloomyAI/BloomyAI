@@ -24,7 +24,7 @@ const openrouterModels: Record<string, string> = {
   flash: "google/gemini-2.5-flash",
   core: "openai/gpt-oss-20b:free",
   pro: "openai/gpt-oss-120b:free",
-  code: "cohere/north-mini-code:free",
+  code: "qwen/qwen3-235b-a22b:free",
 };
 
 // Lower token ceilings per model for snappier first-token latency
@@ -32,7 +32,7 @@ const maxTokensByModel: Record<string, number> = {
   flash: 4096,
   core: 4096,
   pro: 8192,
-  code: 8192,
+  code: 32768,
 };
 
 const visionModels: Record<string, string> = {
