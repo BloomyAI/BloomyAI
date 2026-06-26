@@ -22,9 +22,9 @@ const agentPrompts: Record<string, string> = {
 
 const openrouterModels: Record<string, string> = {
   flash: "google/gemini-2.5-flash",
-  core: "openai/gpt-5.4-mini",
-  pro: "openai/gpt-oss-20b:free",
-  code: "z-ai/glm-5.2",
+  core: "openai/gpt-oss-20b:free",
+  pro: "openai/gpt-oss-120b:free",
+  code: "cohere/north-mini-code:free",
 };
 
 // Lower token ceilings per model for snappier first-token latency
