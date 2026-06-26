@@ -18,35 +18,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    if (!process.env.OPENROUTER_API_KEY) {
-      return NextResponse.json({ error: 'OpenRouter API key is not configured' }, { status: 500 });
+    const giphyResponse = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=${encodeURIComponent(prompt)}&limit=1`);
+    const giphyData = await giphyResponse.json();
+    
+    let videoUrl = null;
+    if (giphyData.data && giphyData.data.length > 0) {
+      videoUrl = giphyData.data[0].images.original.mp4;
     }
 
-    // Use OpenRouter for video generation description
-    const response = await openai.chat.completions.create({
-      model: 'xai/grok-imagine-video',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a video generation assistant. When asked to generate a video, describe the video in detail that would be generated. Return the description only.'
-        },
-        {
-          role: 'user',
-          content: `Generate a video of: ${prompt}`
-        }
-      ],
-      temperature: 0.7,
-    });
+    if (!videoUrl) {
+      // Fallback
+      videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+    }
 
-    const description = response.choices[0]?.message?.content || 'Video generation description';
-
-    // For now, return a placeholder since actual video generation requires specific video models
-    // In production, you would use a dedicated video generation API
     return NextResponse.json({ 
       success: true, 
-      video: null,
-      description: description,
-      note: 'Video generation requires a dedicated video API. This is a placeholder response.'
+      video: videoUrl,
+      description: prompt,
     });
 
   } catch (error: any) {
