@@ -82,9 +82,9 @@ export default function ChatDetailPage() {
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
   const [selectedChatForContext, setSelectedChatForContext] = useState<string | null>(null);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
-  const [newChatName, setNewChatName] = useState("");
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  const [isDesktopApp, setIsDesktopApp] = useState(false);
   const [thinkingPhase, setThinkingPhase] = useState(0);
 
   const thinkingPhrases: Record<string, string[]> = {
@@ -159,6 +159,9 @@ export default function ChatDetailPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      if (navigator.userAgent.toLowerCase().includes('electron')) {
+        setIsDesktopApp(true);
+      }
       const savedConversations = localStorage.getItem('bloomy-conversations');
       if (savedConversations) {
         try {
@@ -698,6 +701,12 @@ export default function ChatDetailPage() {
             </div>
 
             <div className="p-3 mt-auto border-t border-dark-border relative">
+              {!isDesktopApp && (
+                <Link href="/downloads" className="w-full mb-3 flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-bloomy-blue to-bloomy-purple rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity">
+                  <Download className="w-4 h-4" />
+                  Download Bloomy Desktop
+                </Link>
+              )}
               <button
                 onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
                 className="w-full flex items-center justify-between hover:bg-dark-surface transition-colors cursor-pointer rounded-t-xl"
