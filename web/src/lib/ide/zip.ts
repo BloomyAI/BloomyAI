@@ -112,10 +112,33 @@ export async function importWorkspaceZip(file: File): Promise<{ name: string; fi
   };
 }
 
-export function downloadBlob(blob: Blob, filename: string) {
+export async function downloadBlob(blob: Blob, filename: string): Promise<boolean> {
+  // Prefer File System Access API (reliable after async work)
+  if ("showSaveFilePicker" in window) {
+    try {
+      const handle = await (window as Window & { showSaveFilePicker: (opts: object) => Promise<FileSystemFileHandle> }).showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description: "ZIP Archive", accept: { "application/zip": [".zip"] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return true;
+    } catch (e) {
+      if ((e as Error).name === "AbortError") return false;
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
+  a.href = url;
   a.download = filename;
+  a.style.display = "none";
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 200);
+  return true;
 }

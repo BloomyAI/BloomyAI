@@ -43,57 +43,53 @@ export function AiAgentPanel({
   }, [activeConv?.messages, aiOutput, isGenerating]);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="h-9 flex items-center px-3 gap-2 border-b border-[#30363D] shrink-0">
-        <Zap className="w-4 h-4 text-[#58A6FF]" />
-        <span className="text-sm text-[#C9D1D9] font-medium">Bloomy Coder</span>
+    <div className="flex flex-col h-full bg-[#252526]">
+      <div className="h-[35px] flex items-center px-3 gap-2 border-b border-[#2b2b2b] shrink-0">
+        <Zap className="w-4 h-4 text-[#007acc]" />
+        <span className="text-[13px] text-[#cccccc] font-medium">Bloomy Coder</span>
         <div className="flex-1" />
         <button
           onClick={() => onAutoApplyChange(!autoApply)}
-          className="flex items-center gap-1 text-xs text-[#8B949E] hover:text-[#C9D1D9]"
-          title="Auto Apply AI changes"
+          className="flex items-center gap-1 text-[11px] text-[#858585] hover:text-[#cccccc]"
+          title="Auto Apply AI file changes"
         >
-          {autoApply ? (
-            <ToggleRight className="w-4 h-4 text-[#238636]" />
-          ) : (
-            <ToggleLeft className="w-4 h-4" />
-          )}
+          {autoApply ? <ToggleRight className="w-4 h-4 text-[#007acc]" /> : <ToggleLeft className="w-4 h-4" />}
           Auto Apply
         </button>
-        <button onClick={onNewChat} className="p-1 hover:bg-[#21262D] rounded" title="New Chat">
-          <Plus className="w-4 h-4 text-[#8B949E]" />
+        <button onClick={onNewChat} className="p-1 hover:bg-[#2a2d2e] rounded" title="New Chat">
+          <Plus className="w-4 h-4 text-[#858585]" />
         </button>
-        <button onClick={onCopy} className="p-1 hover:bg-[#21262D] rounded" title="Copy">
-          {copied ? <Check className="w-4 h-4 text-[#238636]" /> : <Copy className="w-4 h-4 text-[#8B949E]" />}
+        <button onClick={onCopy} className="p-1 hover:bg-[#2a2d2e] rounded" title="Copy">
+          {copied ? <Check className="w-4 h-4 text-[#89d185]" /> : <Copy className="w-4 h-4 text-[#858585]" />}
         </button>
       </div>
 
-      <div ref={messagesRef} id="ai-messages" className="flex-1 overflow-y-auto p-3 space-y-3">
+      <div ref={messagesRef} className="flex-1 overflow-y-auto p-3 space-y-2">
         {activeConv?.messages.map((msg: ChatMessage) => (
           <div
             key={msg.id}
-            className={`text-sm rounded-lg p-2 ${
+            className={`text-[13px] rounded p-2 ${
               msg.role === "user"
-                ? "bg-[#21262D] text-[#C9D1D9] ml-4"
-                : "bg-[#0D1117] text-[#7EE787] mr-4 border border-[#30363D]"
+                ? "bg-[#2d2d2d] text-[#cccccc]"
+                : "bg-[#1e1e1e] text-[#cccccc] border border-[#3c3c3c]"
             }`}
           >
-            <pre className="whitespace-pre-wrap font-sans">{msg.content}</pre>
+            <pre className="whitespace-pre-wrap font-sans leading-relaxed">{msg.content}</pre>
           </div>
         ))}
         {isGenerating && aiOutput && (
-          <div className="text-sm bg-[#0D1117] text-[#7EE787] mr-4 border border-[#30363D] rounded-lg p-2">
-            <pre className="whitespace-pre-wrap font-sans">{aiOutput}</pre>
+          <div className="text-[13px] bg-[#1e1e1e] text-[#cccccc] border border-[#3c3c3c] rounded p-2">
+            <pre className="whitespace-pre-wrap font-sans leading-relaxed">{aiOutput}</pre>
           </div>
         )}
-        {!activeConv?.messages.length && !aiOutput && (
-          <p className="text-sm text-[#8B949E]">
-            Ask Bloomy Coder to create, edit, refactor, or explain your project. Changes are previewed before applying unless Auto Apply is on.
+        {!activeConv?.messages.length && !aiOutput && !isGenerating && (
+          <p className="text-[13px] text-[#858585] leading-relaxed">
+            Ask Bloomy Coder to create or edit files. With Auto Apply on, files are added to your project automatically.
           </p>
         )}
       </div>
 
-      <div className="p-3 border-t border-[#30363D] shrink-0">
+      <div className="p-3 border-t border-[#2b2b2b] shrink-0">
         <div className="flex gap-2">
           <textarea
             value={aiPrompt}
@@ -106,12 +102,12 @@ export function AiAgentPanel({
             }}
             placeholder="Ask Bloomy Coder... (Ctrl+Enter)"
             rows={3}
-            className="flex-1 bg-[#0D1117] border border-[#30363D] rounded-lg px-3 py-2 text-sm text-[#C9D1D9] placeholder-[#8B949E] focus:outline-none focus:ring-2 focus:ring-[#58A6FF]/50 resize-none"
+            className="flex-1 bg-[#3c3c3c] border border-[#3c3c3c] focus:border-[#007acc] rounded px-3 py-2 text-[13px] text-[#cccccc] placeholder-[#858585] focus:outline-none resize-none"
           />
           <button
             onClick={onSend}
             disabled={isGenerating || !aiPrompt.trim()}
-            className="px-4 py-2 bg-[#238636] hover:bg-[#2EA043] rounded-lg text-sm text-[#C9D1D9] disabled:opacity-50 transition-colors self-end"
+            className="px-3 py-2 bg-[#0e639c] hover:bg-[#1177bb] rounded text-[13px] text-[#ffffff] disabled:opacity-50 self-end"
           >
             {isGenerating ? "..." : "Send"}
           </button>

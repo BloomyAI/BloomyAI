@@ -79,7 +79,7 @@ export interface ExportOptions {
 }
 
 export const DEFAULT_SETTINGS: WorkspaceSettings = {
-  autoApply: false,
+  autoApply: true,
   theme: "vs-dark",
   includeNodeModulesOnExport: false,
 };

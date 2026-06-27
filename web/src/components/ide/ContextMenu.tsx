@@ -13,8 +13,9 @@ interface ContextMenuProps {
 export function ContextMenu({ x, y, targetPath, onAction, onClose }: ContextMenuProps) {
   return (
     <div
-      className="fixed bg-[#161B22] border border-[#30363D] rounded-lg shadow-xl py-1 z-[90] min-w-[160px]"
+      className="fixed bg-[#252526] border border-[#454545] rounded-sm shadow-xl py-1 z-[200] min-w-[180px]"
       style={{ left: x, top: y }}
+      onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
     >
       <button

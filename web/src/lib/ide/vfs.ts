@@ -33,11 +33,33 @@ export function mapToFiles(map: Map<string, string>): WorkspaceFile[] {
     .map(([path, content]) => ({ path, content }));
 }
 
+function ensureFolder(root: TreeNode[], parts: string[]) {
+  let current = root;
+  for (let i = 0; i < parts.length; i++) {
+    const name = parts[i];
+    const path = parts.slice(0, i + 1).join("/");
+    let folder = current.find((n) => n.type === "folder" && n.name === name);
+    if (!folder) {
+      folder = { name, path, type: "folder", children: [] };
+      current.push(folder);
+    }
+    current = folder.children!;
+  }
+}
+
 export function buildTree(files: WorkspaceFile[]): TreeNode[] {
   const root: TreeNode[] = [];
 
   for (const file of files) {
-    const parts = normalizePath(file.path).split("/");
+    const normalized = normalizePath(file.path);
+
+    if (normalized.endsWith(".bloomykeep")) {
+      const folderPath = normalized.replace(/\/\.bloomykeep$/, "");
+      if (folderPath) ensureFolder(root, folderPath.split("/"));
+      continue;
+    }
+
+    const parts = normalized.split("/");
     let current = root;
 
     for (let i = 0; i < parts.length; i++) {
@@ -95,7 +117,11 @@ export function deletePath(files: WorkspaceFile[], path: string): WorkspaceFile[
   const normalized = normalizePath(path);
   return files.filter((f) => {
     const fp = normalizePath(f.path);
-    return fp !== normalized && !fp.startsWith(normalized + "/");
+    if (fp === normalized) return false;
+    if (fp.startsWith(normalized + "/")) return false;
+    // Deleting folder also removes .bloomykeep marker
+    if (fp === joinPath(normalized, ".bloomykeep")) return false;
+    return true;
   });
 }
 

@@ -46,11 +46,40 @@ export function buildWorkspaceContext(
 
 export function parseFilesFromContent(content: string): { path: string; content: string }[] {
   const files: { path: string; content: string }[] = [];
-  const fileRegex = /FILE:\s*([^\n\r]+)\s*\n```[\w]*\n?([\s\S]*?)```/g;
+  const seen = new Set<string>();
+
+  const add = (path: string, fileContent: string) => {
+    const p = path.trim().replace(/^['"`]|['"`]$/g, "");
+    if (!p || seen.has(p)) return;
+    seen.add(p);
+    files.push({ path: p, content: fileContent.trimEnd() });
+  };
+
+  // FILE: path\n```...```
+  const fileRegex = /FILE:\s*([^\n\r`]+)\s*\n```[\w.-]*\n?([\s\S]*?)```/gi;
   let match;
   while ((match = fileRegex.exec(content)) !== null) {
-    files.push({ path: match[1].trim(), content: match[2].trimEnd() });
+    add(match[1], match[2]);
   }
+
+  // ```lang path/to/file.ext\n...```
+  const pathInFence = /```[\w.-]*\s+([^\n\r]+\.[a-zA-Z0-9]+)\s*\n([\s\S]*?)```/gi;
+  while ((match = pathInFence.exec(content)) !== null) {
+    add(match[1], match[2]);
+  }
+
+  // // filename.ext or # filename.ext before code block
+  const commentFile = /(?:\/\/|#)\s*(\S+\.\w+)\s*\n```[\w.-]*\n?([\s\S]*?)```/gi;
+  while ((match = commentFile.exec(content)) !== null) {
+    add(match[1], match[2]);
+  }
+
+  // **filename.ext** before code block
+  const boldFile = /\*\*(\S+\.\w+)\*\*\s*\n```[\w.-]*\n?([\s\S]*?)```/gi;
+  while ((match = boldFile.exec(content)) !== null) {
+    add(match[1], match[2]);
+  }
+
   return files;
 }
 

@@ -2,32 +2,36 @@
 
 import type { EditorTab } from "@/lib/ide/types";
 import { getBreadcrumbs } from "@/lib/ide/vfs";
-import { ChevronRight, Code2, FileText, Plus, X } from "lucide-react";
+import { ChevronRight, FileText, X } from "lucide-react";
 import Editor, { DiffEditor } from "@monaco-editor/react";
 
 const EDITOR_OPTIONS = {
   fontSize: 14,
-  fontFamily: "'Fira Code', Consolas, monospace",
-  minimap: { enabled: true },
+  fontFamily: "'Consolas', 'Courier New', monospace",
+  fontLigatures: true,
+  minimap: { enabled: true, scale: 1 },
   scrollBeyondLastLine: false,
   smoothScrolling: true,
   cursorBlinking: "smooth" as const,
-  renderLineHighlight: "all" as const,
+  cursorSmoothCaretAnimation: "on" as const,
+  renderLineHighlight: "line" as const,
   bracketPairColorization: { enabled: true },
   guides: { bracketPairs: true, indentation: true },
   autoClosingBrackets: "always" as const,
   autoClosingQuotes: "always" as const,
   autoIndent: "full" as const,
   tabSize: 2,
-  wordWrap: "on" as const,
+  wordWrap: "off" as const,
   lineNumbers: "on" as const,
   folding: true,
   formatOnPaste: true,
   formatOnType: true,
   suggestOnTriggerCharacters: true,
-  quickSuggestions: true,
+  quickSuggestions: { other: true, comments: false, strings: true },
   multiCursorModifier: "alt" as const,
   snippetSuggestions: "top" as const,
+  padding: { top: 8 },
+  scrollbar: { verticalScrollbarSize: 10, horizontalScrollbarSize: 10 },
 };
 
 interface EditorPanelProps {
@@ -52,52 +56,54 @@ export function EditorPanel({
   onTabClose,
   onChange,
   onMount,
-  onNewFile,
   onBreadcrumbClick,
 }: EditorPanelProps) {
   const activeTab = tabs.find((t) => t.id === activeTabId);
   const breadcrumbs = activeTab ? getBreadcrumbs(activeTab.path) : [];
 
   return (
-    <div className="flex-1 flex flex-col min-w-0">
-      <div className="h-9 bg-[#161B22] flex items-center border-b border-[#30363D] overflow-x-auto shrink-0">
-        {tabs.map((tab) => (
-          <div
-            key={tab.id}
-            onClick={() => onTabSelect(tab.id)}
-            className={`flex items-center gap-2 px-3 py-1 text-sm cursor-pointer border-r border-[#30363D] min-w-0 shrink-0 ${
-              activeTabId === tab.id
-                ? "bg-[#0D1117] text-[#C9D1D9] border-t-2 border-t-[#F78166]"
-                : "text-[#8B949E] hover:bg-[#21262D]"
-            }`}
-          >
-            <FileText className="w-4 h-4 shrink-0" />
-            <span className="truncate">{tab.path.split("/").pop()}</span>
-            {tab.modified && <div className="w-2 h-2 rounded-full bg-[#F78166] shrink-0" />}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onTabClose(tab.id);
-              }}
-              className="p-0.5 hover:bg-[#21262D] rounded shrink-0"
+    <div className="flex-1 flex flex-col min-w-0 bg-[#1e1e1e]">
+      {/* Tab bar — VS Code style */}
+      <div className="h-[35px] bg-[#252526] flex items-end overflow-x-auto shrink-0">
+        {tabs.map((tab) => {
+          const isActive = activeTabId === tab.id;
+          const name = tab.path.split("/").pop() || tab.path;
+          return (
+            <div
+              key={tab.id}
+              onClick={() => onTabSelect(tab.id)}
+              className={`group flex items-center gap-1.5 h-[35px] px-3 text-[13px] cursor-pointer border-r border-[#252526] min-w-0 shrink-0 max-w-[200px] ${
+                isActive
+                  ? "bg-[#1e1e1e] text-[#ffffff] border-t border-t-[#007acc]"
+                  : "bg-[#2d2d2d] text-[#969696] hover:bg-[#1e1e1e] hover:text-[#cccccc]"
+              }`}
             >
-              <X className="w-3 h-3" />
-            </button>
-          </div>
-        ))}
-        <button onClick={onNewFile} className="p-2 text-[#8B949E] hover:text-[#C9D1D9] hover:bg-[#21262D]">
-          <Plus className="w-4 h-4" />
-        </button>
+              <FileText className="w-4 h-4 shrink-0 opacity-70" />
+              <span className="truncate">{name}</span>
+              {tab.modified && <span className="text-[#cccccc] text-lg leading-none">●</span>}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onTabClose(tab.id);
+                }}
+                className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-[#4d4d4d] shrink-0"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          );
+        })}
       </div>
 
+      {/* Breadcrumbs */}
       {activeTab && !diffMode && (
-        <div className="h-7 flex items-center px-3 gap-1 bg-[#0D1117] border-b border-[#30363D] text-xs text-[#8B949E] shrink-0 overflow-x-auto">
+        <div className="h-[22px] flex items-center px-4 gap-0.5 bg-[#1e1e1e] text-[11px] text-[#cccccc] shrink-0 border-b border-[#2b2b2b]">
           {breadcrumbs.map((crumb, i) => (
-            <span key={crumb.path} className="flex items-center gap-1 shrink-0">
-              {i > 0 && <ChevronRight className="w-3 h-3" />}
+            <span key={crumb.path} className="flex items-center gap-0.5 shrink-0">
+              {i > 0 && <ChevronRight className="w-3 h-3 text-[#858585]" />}
               <button
                 onClick={() => onBreadcrumbClick(crumb.path)}
-                className="hover:text-[#58A6FF] truncate max-w-[120px]"
+                className="hover:text-[#ffffff] truncate max-w-[140px] px-0.5 rounded hover:bg-[#2a2d2e]"
               >
                 {crumb.name}
               </button>
@@ -114,7 +120,7 @@ export function EditorPanel({
             original={diffMode.original}
             modified={diffMode.modified}
             theme={theme}
-            options={{ ...EDITOR_OPTIONS, readOnly: false, renderSideBySide: true }}
+            options={{ ...EDITOR_OPTIONS, renderSideBySide: true }}
           />
         ) : activeTab ? (
           <Editor
@@ -128,17 +134,11 @@ export function EditorPanel({
             options={EDITOR_OPTIONS}
           />
         ) : (
-          <div className="h-full flex items-center justify-center text-[#8B949E]">
+          <div className="h-full flex items-center justify-center text-[#858585] bg-[#1e1e1e]">
             <div className="text-center">
-              <Code2 className="w-16 h-16 mx-auto mb-4 opacity-30" />
-              <p className="text-lg">Bloomy AI IDE</p>
-              <p className="text-sm mt-2">Open a file from the explorer or press Ctrl+P</p>
-              <button
-                onClick={onNewFile}
-                className="mt-4 px-4 py-2 bg-[#238636] hover:bg-[#2EA043] rounded-lg text-sm text-[#C9D1D9] transition-colors"
-              >
-                New File
-              </button>
+              <p className="text-[22px] text-[#cccccc] mb-2">Bloomy IDE</p>
+              <p className="text-[13px]">Open a file from the explorer</p>
+              <p className="text-[12px] mt-2 text-[#6e6e6e]">Ctrl+N new file · Ctrl+Shift+P command palette</p>
             </div>
           </div>
         )}

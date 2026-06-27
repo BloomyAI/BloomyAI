@@ -84,6 +84,7 @@ export default function ChatDetailPage() {
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
   const [selectedChatForContext, setSelectedChatForContext] = useState<string | null>(null);
   const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [newChatName, setNewChatName] = useState("");
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [isDesktopApp, setIsDesktopApp] = useState(false);
@@ -574,19 +575,17 @@ export default function ChatDetailPage() {
 
   const handleRenameChat = () => {
     if (selectedChatForContext && newChatName.trim()) {
-      setConversations(prev => prev.map(conv => 
-        conv.id === selectedChatForContext 
-          ? { ...conv, title: newChatName.trim() }
-          : conv
-      ));
-      localStorage.setItem('bloomy-conversations', JSON.stringify(conversations.map(conv => 
-        conv.id === selectedChatForContext 
-          ? { ...conv, title: newChatName.trim() }
-          : conv
-      )));
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === selectedChatForContext
+            ? { ...conv, title: newChatName.trim() }
+            : conv
+        )
+      );
       setRenameDialogOpen(false);
-      setNewChatName('');
+      setNewChatName("");
       setContextMenuOpen(false);
+      setSelectedChatForContext(null);
     }
   };
 
@@ -895,17 +894,23 @@ export default function ChatDetailPage() {
             left: `${contextMenuPosition.x}px`,
             top: `${contextMenuPosition.y}px`,
           }}
-          onClick={() => setContextMenuOpen(false)}
+          onMouseDown={(e) => e.stopPropagation()}
         >
           <button
-            onClick={openRenameDialog}
+            onClick={(e) => {
+              e.stopPropagation();
+              openRenameDialog();
+            }}
             className="w-full px-4 py-2 text-left text-dark-text hover:bg-dark-border rounded-t-lg transition-colors flex items-center gap-2"
           >
             <Sparkles className="w-4 h-4" />
             Rename
           </button>
           <button
-            onClick={() => selectedChatForContext && handleDeleteChat(selectedChatForContext)}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (selectedChatForContext) handleDeleteChat(selectedChatForContext);
+            }}
             className="w-full px-4 py-2 text-left text-red-400 hover:bg-dark-border rounded-b-lg transition-colors flex items-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
@@ -916,8 +921,14 @@ export default function ChatDetailPage() {
 
       {/* Rename Dialog */}
       {renameDialogOpen && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-dark-card border border-dark-border rounded-2xl w-full max-w-md p-6">
+        <div
+          className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4"
+          onClick={() => setRenameDialogOpen(false)}
+        >
+          <div
+            className="bg-dark-card border border-dark-border rounded-2xl w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2 className="text-xl font-bold text-dark-text mb-4">Rename Chat</h2>
             <input
               type="text"
@@ -926,9 +937,9 @@ export default function ChatDetailPage() {
               placeholder="Enter new name"
               className="w-full bg-dark-surface border border-dark-border rounded-lg px-4 py-3 text-dark-text placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-bloomy-purple/50 mb-4"
               autoFocus
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') handleRenameChat();
-                if (e.key === 'Escape') setRenameDialogOpen(false);
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleRenameChat();
+                if (e.key === "Escape") setRenameDialogOpen(false);
               }}
             />
             <div className="flex gap-3 justify-end">

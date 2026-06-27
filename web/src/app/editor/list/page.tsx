@@ -40,7 +40,8 @@ export default function EditorListPage() {
     e.preventDefault();
     e.stopPropagation();
     const blob = await exportWorkspaceZip(ws.name, ws.files, { includeDotfiles: true });
-    downloadBlob(blob, `${ws.name}.zip`);
+    const ok = await downloadBlob(blob, `${ws.name.replace(/[^\w.-]/g, "_")}.zip`);
+    if (!ok) return;
   };
 
   const handleImportZip = async (file: File) => {
