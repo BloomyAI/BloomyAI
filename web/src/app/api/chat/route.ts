@@ -24,7 +24,7 @@ const openrouterModels: Record<string, string> = {
   flash: "google/gemini-2.5-flash",
   core: "openai/gpt-oss-20b:free",
   pro: "openai/gpt-oss-120b:free",
-  code: "qwen/qwen3-235b-a22b:free",
+  code: "nousresearch/hermes-3-llama-3.1-405b:free",
 };
 
 // Lower token ceilings per model for snappier first-token latency
