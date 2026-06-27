@@ -5,9 +5,9 @@ import { Download, CheckCircle, Clock, AlertCircle } from "lucide-react";
 
 export default function DownloadsPage() {
   const platforms = [
-    { name: "Windows", icon: "fa-brands fa-microsoft", size: "125 MB", status: "Available", version: "1.0.0" },
-    { name: "macOS", icon: "fa-brands fa-apple", size: "142 MB", status: "Coming Soon", version: "1.0.0" },
-    { name: "Linux", icon: "fa-brands fa-linux", size: "118 MB", status: "Coming Soon", version: "1.0.0" },
+    { name: "Windows", icon: "fa-brands fa-microsoft", size: "97.4 MB", status: "Available", version: "1.0.0", file: "/downloads/bloomy-desktop.zip" },
+    { name: "macOS", icon: "fa-brands fa-apple", size: "116 MB", status: "Available", version: "1.0.0", file: "/downloads/bloomy-desktop-macos.zip" },
+    { name: "Linux", icon: "fa-brands fa-linux", size: "120 MB", status: "Available", version: "1.0.0", file: "/downloads/bloomy-desktop-linux.zip" },
     { name: "iOS", icon: "fa-brands fa-app-store-ios", size: "98 MB", status: "Coming Soon", version: "1.0.0" },
     { name: "Android", icon: "fa-brands fa-android", size: "105 MB", status: "Coming Soon", version: "1.0.0" },
   ];
@@ -68,9 +68,19 @@ export default function DownloadsPage() {
                 <h3 className="text-xl font-bold mb-2">{platform.name}</h3>
                 <p className="text-white/60 mb-4">{platform.size} • Version {platform.version}</p>
                 <button
+                  onClick={() => {
+                    if (platform.status === "Available" && platform.file) {
+                      const a = document.createElement("a");
+                      a.href = platform.file;
+                      a.download = platform.file.split("/").pop() || "download.zip";
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    }
+                  }}
                   className={`w-full py-3 rounded-lg font-medium flex items-center justify-center gap-2 ${
                     platform.status === "Available"
-                      ? "btn-primary"
+                      ? "btn-primary hover:scale-[1.02] transition-transform"
                       : "btn-secondary opacity-50 cursor-not-allowed"
                   }`}
                   disabled={platform.status !== "Available"}
