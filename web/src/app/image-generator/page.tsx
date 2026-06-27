@@ -33,6 +33,16 @@ export default function ImageGenerator() {
     }
   };
 
+  const handleDownload = () => {
+    if (!generatedImage) return;
+    const a = document.createElement("a");
+    a.href = generatedImage;
+    a.download = `bloomy-image-${Date.now()}.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <div className="h-screen flex bg-dark-bg">
       {/* Sidebar */}
@@ -62,7 +72,10 @@ export default function ImageGenerator() {
           {generatedImage ? (
             <div className="relative">
               <img src={generatedImage} alt="Generated" className="max-w-2xl rounded-lg shadow-2xl" />
-              <button className="absolute bottom-4 right-4 bg-dark-card border border-dark-border px-4 py-2 rounded-md flex items-center gap-2 hover:bg-dark-surface transition-colors">
+              <button 
+                onClick={handleDownload}
+                className="absolute bottom-4 right-4 bg-dark-card border border-dark-border px-4 py-2 rounded-md flex items-center gap-2 hover:bg-dark-surface transition-colors"
+              >
                 <Download className="w-4 h-4" />
                 Download
               </button>
