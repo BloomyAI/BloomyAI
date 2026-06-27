@@ -59,6 +59,7 @@ export default function VideoGenerator() {
             <img src="/logo.png" alt="Bloomy AI" className="w-8 h-8" />
           </Link>
           <span className="font-semibold text-dark-text">Video Generator</span>
+          <span className="text-xs text-dark-text-secondary block mt-1">Wan 2.7 · alibaba/wan-2.7</span>
         </div>
         
         <div className="px-4 py-2">
@@ -91,7 +92,9 @@ export default function VideoGenerator() {
           ) : (
             <div className="text-center">
               <Video className="w-16 h-16 text-dark-text-secondary mx-auto mb-4" />
-              <p className="text-dark-text-secondary">Enter a prompt to generate a video</p>
+              <p className="text-dark-text-secondary">
+                {isGenerating ? 'Generating video with Wan 2.7… this may take a few minutes' : 'Enter a prompt to generate a video'}
+              </p>
             </div>
           )}
         </div>
@@ -113,11 +116,16 @@ export default function VideoGenerator() {
                 className="bg-gradient-to-r from-bloomy-blue to-bloomy-purple px-6 py-3 rounded-lg font-medium text-white flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isGenerating ? (
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    Generating…
+                  </>
                 ) : (
-                  <Sparkles className="w-4 h-4" />
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    Generate
+                  </>
                 )}
-                Generate
               </button>
             </div>
           </div>
