@@ -1,12 +1,11 @@
 /** Bloomy Coder — separate from main /api/chat models */
 
-export const CODER_PRIMARY_MODEL = "qwen/qwen3-coder:free";
+export const CODER_PRIMARY_MODEL = "qwen/qwen-2.5-coder-32b-instruct";
 
 export const CODER_MODEL_FALLBACKS = [
-  "qwen/qwen3-coder:free",
-  "qwen/qwen-2.5-coder-32b-instruct:free",
-  "deepseek/deepseek-chat-v3-0324:free",
-  "meta-llama/llama-3.3-70b-instruct:free",
+  "qwen/qwen-2.5-coder-32b-instruct",
+  "deepseek/deepseek-chat-v3-0324",
+  "meta-llama/llama-3.3-70b-instruct",
   "openai/gpt-oss-120b:free",
 ];
 
