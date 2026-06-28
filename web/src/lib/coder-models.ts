@@ -9,7 +9,7 @@ export const CODER_MODEL_FALLBACKS = [
   "openai/gpt-oss-120b:free",
 ];
 
-export const CODER_MAX_TOKENS = 32768;
+export const CODER_MAX_TOKENS = 16384;
 
 export const CODER_VISION_MODEL = "z-ai/glm-5.2";
 
