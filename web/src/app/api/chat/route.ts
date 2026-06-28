@@ -18,10 +18,10 @@ const agentPrompts: Record<string, string> = {
 };
 
 const openrouterModels: Record<string, string> = {
-  flash: "meta-llama/llama-3.1-70b-instruct:free",
+  flash: "meta-llama/llama-3.1-70b-instruct",
   core: "openai/gpt-oss-120b:free",
   pro: "openai/gpt-oss-120b:free",
-  code: "meta-llama/llama-3.1-70b-instruct:free",
+  code: "meta-llama/llama-3.1-70b-instruct",
 };
 
 const maxTokensByModel: Record<string, number> = {
