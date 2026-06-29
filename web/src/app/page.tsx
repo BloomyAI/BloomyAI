@@ -14,19 +14,19 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 bg-[#1E222B] border-b border-white/10">
+      <nav className="relative z-10 bg-dark-surface border-b border-dark-border">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Bloomy AI" className="w-10 h-10 rounded-full" />
             <span className="text-2xl font-bold gradient-text">Bloomy AI</span>
           </div>
           <div className="flex items-center gap-6">
-            <a href="/login" className="text-white/80 hover:text-white transition-colors">Login</a>
-            <a href="/chat" className="text-white/80 hover:text-white transition-colors">Chat</a>
-            <a href="/editor" className="text-white/80 hover:text-white transition-colors">Editor</a>
-            <a href="/agents" className="text-white/80 hover:text-white transition-colors">Agents</a>
-            <a href="/workspaces" className="text-white/80 hover:text-white transition-colors">Workspaces</a>
-            <a href="/settings" className="text-white/80 hover:text-white transition-colors">Settings</a>
+            <a href="/login" className="text-dark-text-secondary hover:text-dark-text transition-colors">Login</a>
+            <a href="/chat" className="text-dark-text-secondary hover:text-dark-text transition-colors">Chat</a>
+            <a href="/editor" className="text-dark-text-secondary hover:text-dark-text transition-colors">Editor</a>
+            <a href="/agents" className="text-dark-text-secondary hover:text-dark-text transition-colors">Agents</a>
+            <a href="/workspaces" className="text-dark-text-secondary hover:text-dark-text transition-colors">Workspaces</a>
+            <a href="/settings" className="text-dark-text-secondary hover:text-dark-text transition-colors">Settings</a>
             <a href="/chat" className="btn-primary">Start Chatting</a>
           </div>
         </div>
@@ -60,16 +60,16 @@ export default function Home() {
           >
             <span className="gradient-text">Complete AI Ecosystem</span>
             <br />
-            <span className="text-white">for the Future</span>
+            <span className="text-dark-text">for the Future</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl text-white/70 mb-10 max-w-3xl mx-auto"
+            className="text-xl text-dark-text-secondary mb-10 max-w-3xl mx-auto"
           >
-            Multi-model support, advanced memory system, integrated IDE, project generation, 
+            Multi-model support, advanced memory system, integrated IDE, project generation,
             and specialized AI agents - all in one powerful platform.
           </motion.p>
 
@@ -107,7 +107,7 @@ export default function Home() {
                 <feature.icon className="w-6 h-6 text-bloomy-purple" />
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-white/70">{feature.description}</p>
+              <p className="text-dark-text-secondary">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -133,7 +133,7 @@ export default function Home() {
                   <tier.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
-                <p className="text-white/70 mb-4">{tier.description}</p>
+                <p className="text-dark-text-secondary mb-4">{tier.description}</p>
                 <div className="text-sm text-bloomy-purple font-medium">{tier.useCase}</div>
               </motion.div>
             ))}
@@ -165,7 +165,7 @@ export default function Home() {
               >
                 <div className="text-4xl mb-4"><i className={platform.icon}></i></div>
                 <h3 className="text-xl font-bold mb-2">{platform.name}</h3>
-                <p className="text-white/60 mb-4">{platform.size}</p>
+                <p className="text-dark-text-muted mb-4">{platform.size}</p>
                 <button
                   onClick={() => platform.status === "Available" && (window.location.href = "/downloads")}
                   className={`w-full py-3 rounded-lg font-medium ${
@@ -184,8 +184,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-[#1E222B] border-t border-white/10 mt-24">
-        <div className="max-w-7xl mx-auto px-6 py-8 text-center text-white/60">
+      <footer className="relative z-10 bg-dark-surface border-t border-dark-border mt-24">
+        <div className="max-w-7xl mx-auto px-6 py-8 text-center text-dark-text-muted">
           <p>&copy; 2025 Bloomy AI. All rights reserved.                                                  <a href="https://discord.gg/UP5Njtc53z" target="_blank" rel="noopener noreferrer" className="text-bloomy-purple hover:underline">Join Discord for support</a></p>
         </div>
       </footer>
