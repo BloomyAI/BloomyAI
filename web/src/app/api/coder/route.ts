@@ -8,7 +8,12 @@ import {
   isRetryableCoderError,
 } from '@/lib/coder-models';
 
-const openai = new OpenAI({
+const groq = new OpenAI({
+  baseURL: 'https://api.groq.com/openai/v1',
+  apiKey: process.env.GROQ_API_KEY || 'dummy_key_for_build',
+});
+
+const openrouter = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
   apiKey: process.env.OPENROUTER_API_KEY || 'dummy_key_for_build',
   defaultHeaders: {
@@ -18,11 +23,12 @@ const openai = new OpenAI({
 });
 
 async function streamCompletion(
+  client: OpenAI,
   model: string,
   messages: OpenAI.ChatCompletionMessageParam[],
   onChunk: (text: string) => void
 ): Promise<void> {
-  const completion = await openai.chat.completions.create({
+  const completion = await client.chat.completions.create({
     model,
     messages,
     stream: true,
@@ -43,10 +49,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { message, attachments, history } = body;
 
-    if (!process.env.OPENROUTER_API_KEY) {
+    if (!process.env.GROQ_API_KEY && !process.env.OPENROUTER_API_KEY) {
       return NextResponse.json({
         type: 'error',
-        content: 'No API key configured. Add OPENROUTER_API_KEY to environment variables.',
+        content: 'No API key configured. Add GROQ_API_KEY or OPENROUTER_API_KEY to environment variables.',
       });
     }
 
@@ -95,10 +101,10 @@ export async function POST(request: NextRequest) {
         const modelsToTry = hasImage ? [CODER_VISION_MODEL] : coderModelsToTry();
         let lastError: unknown = null;
 
-        for (let i = 0; i < modelsToTry.length; i++) {
-          const tryModel = modelsToTry[i];
+        // Try Groq first for non-vision models
+        if (!hasImage && process.env.GROQ_API_KEY) {
           try {
-            await streamCompletion(tryModel, messages, (content) => {
+            await streamCompletion(groq, modelsToTry[0], messages, (content) => {
               controller.enqueue(
                 encoder.encode(`data: ${JSON.stringify({ type: 'chunk', content })}\n\n`)
               );
@@ -108,7 +114,37 @@ export async function POST(request: NextRequest) {
             return;
           } catch (error) {
             lastError = error;
-            console.error(`Coder model ${tryModel} failed:`, error);
+            console.error(`Groq coder model ${modelsToTry[0]} failed:`, error);
+            if (!isRetryableCoderError(error)) {
+              const err = error as { status?: number; message?: string };
+              let errorMessage = err?.message || 'Failed to generate response';
+              if (err?.status === 401) {
+                errorMessage = 'Groq API key invalid. Verify GROQ_API_KEY.';
+              }
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ type: 'error', content: errorMessage })}\n\n`)
+              );
+              controller.close();
+              return;
+            }
+          }
+        }
+
+        // Fallback to OpenRouter
+        for (let i = 0; i < modelsToTry.length; i++) {
+          const tryModel = modelsToTry[i];
+          try {
+            await streamCompletion(openrouter, tryModel, messages, (content) => {
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ type: 'chunk', content })}\n\n`)
+              );
+            });
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
+            controller.close();
+            return;
+          } catch (error) {
+            lastError = error;
+            console.error(`OpenRouter coder model ${tryModel} failed:`, error);
             if (i < modelsToTry.length - 1 && isRetryableCoderError(error)) continue;
             break;
           }
@@ -117,7 +153,7 @@ export async function POST(request: NextRequest) {
         const err = lastError as { status?: number; message?: string };
         let errorMessage = err?.message || 'Failed to generate response';
         if (err?.status === 401) {
-          errorMessage = 'OpenRouter API key invalid. Verify OPENROUTER_API_KEY.';
+          errorMessage = 'API key invalid. Verify GROQ_API_KEY or OPENROUTER_API_KEY.';
         } else if (err?.status === 402 || errorMessage.toLowerCase().includes('insufficient credits')) {
           errorMessage =
             'Coder free models unavailable right now. Try again in a few minutes or add OpenRouter credits.';
