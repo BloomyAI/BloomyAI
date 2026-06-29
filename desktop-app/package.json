@@ -25,10 +25,10 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": ["x64", "arm64"]
         }
       ],
-      "icon": "logo.png",
+      "icon": "logo.ico",
       "artifactName": "Bloomy-AI-Setup-${version}.${ext}"
     },
     "mac": {
