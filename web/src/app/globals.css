@@ -6,13 +6,13 @@
   --bloomy-purple: #8B5CF6;
   --bloomy-pink: #EC4899;
   --bloomy-blue: #3B82F6;
-  --dark-bg: #0D1117;
-  --dark-surface: #161B22;
-  --dark-card: #21262D;
-  --dark-border: #30363D;
-  --dark-text: #E6EDF3;
-  --dark-text-secondary: #8B949E;
-  --dark-text-muted: #6E7681;
+  --dark-bg: #000000;
+  --dark-surface: #0a0a0a;
+  --dark-card: #141414;
+  --dark-border: #262626;
+  --dark-text: #ffffff;
+  --dark-text-secondary: #a3a3a3;
+  --dark-text-muted: #737373;
 }
 
 * {
