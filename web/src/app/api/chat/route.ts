@@ -28,7 +28,6 @@ const groqModels: Record<string, string> = {
   pro: "llama-3.1-8b-instant",
   code: "llama-3.3-70b-versatile",
 };
-};
 
 const fallbackModels: Record<string, string[]> = {
   flash: ["meta-llama/llama-3.1-70b-instruct:free", "qwen/qwen-2.5-72b-instruct:free"],
