@@ -25,7 +25,11 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64", "arm64", "ia32"]
+          "arch": [
+            "x64",
+            "arm64",
+            "ia32"
+          ]
         }
       ],
       "icon": "logo.ico",
@@ -35,7 +39,10 @@
       "target": [
         {
           "target": "dmg",
-          "arch": ["x64", "arm64"]
+          "arch": [
+            "x64",
+            "arm64"
+          ]
         }
       ],
       "icon": "logo.png",
@@ -45,11 +52,15 @@
       "target": [
         {
           "target": "AppImage",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "tar.gz",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "logo.png",
@@ -64,6 +75,8 @@
   },
   "devDependencies": {
     "electron": "^42.4.1",
-    "electron-builder": "^26.15.3"
+    "electron-builder": "^26.15.3",
+    "jimp": "^1.6.1",
+    "png-to-ico": "^3.0.1"
   }
 }
