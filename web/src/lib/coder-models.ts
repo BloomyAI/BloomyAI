@@ -1,6 +1,6 @@
 /** Bloomy Coder — separate from main /api/chat models */
 
-export const CODER_PRIMARY_MODEL = "qwen/qwen-2.5-coder-32b-instruct:free";
+export const CODER_PRIMARY_MODEL = "meta-llama/llama-3.3-70b-instruct:free";
 
 export const CODER_MODEL_FALLBACKS = [
   "meta-llama/llama-3.1-70b-instruct:free",
