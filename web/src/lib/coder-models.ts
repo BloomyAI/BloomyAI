@@ -4,7 +4,7 @@ export const CODER_PRIMARY_MODEL = "meta-llama/llama-3.1-70b-instruct";
 
 export const CODER_MODEL_FALLBACKS = [
   "meta-llama/llama-3.3-70b-instruct",
-  "meta-llama/llama-3-70b-instruct",
+  "meta-llama/llama-3.1-70b-instruct",
 ];
 
 export const CODER_MAX_TOKENS = 16384;
