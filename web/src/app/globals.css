@@ -6,6 +6,13 @@
   --bloomy-purple: #8B5CF6;
   --bloomy-pink: #EC4899;
   --bloomy-blue: #3B82F6;
+  --dark-bg: #0D1117;
+  --dark-surface: #161B22;
+  --dark-card: #21262D;
+  --dark-border: #30363D;
+  --dark-text: #E6EDF3;
+  --dark-text-secondary: #8B949E;
+  --dark-text-muted: #6E7681;
 }
 
 * {
@@ -16,12 +23,13 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #1E222B;
-  color: white;
+  background: var(--dark-bg);
+  color: var(--dark-text);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   touch-action: pan-y;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
@@ -127,16 +135,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--dark-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--dark-border);
   border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--dark-text-muted);
 }
 
 /* Fix logo background matching by blending */

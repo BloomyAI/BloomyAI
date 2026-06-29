@@ -487,19 +487,21 @@ export default function ChatDetailPage() {
                 
                 return (
                   <div key={i} className="relative my-2">
-                    <div className="flex items-center justify-between bg-dark-surface px-3 py-2 rounded-t-lg border border-dark-border">
+                    <div className="flex items-center justify-between bg-dark-surface px-3 py-2 rounded-t-lg border border-dark-border border-b-0">
                       <span className="text-xs text-dark-text-secondary">{language}</span>
                       <button
                         onClick={() => copyCode(actualCode)}
-                        className="flex items-center gap-1 text-xs text-dark-text-secondary hover:text-dark-text"
+                        className="flex items-center gap-1 text-xs text-dark-text-secondary hover:text-dark-text transition-colors"
                       >
                         {copiedCode === actualCode ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                         {copiedCode === actualCode ? 'Copied' : 'Copy'}
                       </button>
                     </div>
-                    <pre className="bg-dark-bg p-4 rounded-b-lg overflow-x-auto border border-dark-border">
-                      <code className="text-sm text-green-400">{actualCode}</code>
-                    </pre>
+                    <div className="bg-dark-bg rounded-b-lg border border-dark-border border-t-0 overflow-auto max-h-96">
+                      <pre className="p-4 text-sm">
+                        <code className="text-green-400 whitespace-pre">{actualCode}</code>
+                      </pre>
+                    </div>
                   </div>
                 );
               } else if (part.startsWith('**') && part.endsWith('**')) {
